@@ -1,17 +1,44 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { BrowserRouter, Route } from 'react-router-dom'
+
+const MoneyLifeDashboardPage = () => {
+  return (
+    <div>
+      <h1>Money & Time App</h1>
+    </div>
+  )
+}
+
+const AddPage = () => {
+  return (
+    <div>
+      <h1>Add Money</h1>
+    </div>
+  )
+}
+
+const EditPage = () => (
+  <h1>Edit Money Page</h1>
+)
+
+const HelpPage = () => (
+  <h1>Help Page</h1>
+)
+
+const routes = (
+  <BrowserRouter>
+    <div>
+      <Route path='/' component={MoneyLifeDashboardPage} exact={true} />
+      <Route path='/create' component={AddPage} />
+      <Route path='/edit' component={EditPage} />
+      <Route path='/help' component={HelpPage} />
+    </div>
+  </BrowserRouter>
+)
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
+  routes,
   document.getElementById('root')
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
