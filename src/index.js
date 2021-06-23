@@ -9,104 +9,97 @@
 //   document.getElementById('root')
 // );
 
-// -------------------------- Redux -----------------------------
+// ------------------------- Redux Expensify ------------------------------
 
-// import { createStore } from 'redux'
+import { createStore, combineReducers } from 'redux'
+import uuid from 'uuid'
 
-// const store = createStore((state = { count: 0 }, action) => {
+// ADD_EXPENSE
+const addExpense = ({ description = '', note = '', amount = 0, createdAt = 0 } = {}) => ({
+  type: 'ADD_EXPENSE',
+  expense: {
+    id: uuid(),
+    description,
+    note,
+    amount,
+    createdAt
+  }
+})
 
-//   switch (action.type) {
-//     case 'INCREMENT':
-//       const incrementBy = typeof action.incrementBy === 'number' ? action.incrementBy : 1
-//       return {
-//         count: state.count + incrementBy
-//       }
-//     case 'DECREMENT':
-//       const decrementBy = typeof action.decrementBy === 'number' ? action.decrementBy : 1
-//       return {
-//         count: state.count - decrementBy
-//       }
-//     case 'RESET':
-//       return {
-//         count: 0
-//       }
-//     case 'SET':
-//       return {
-//         count: action.count
-//       }
-//     default:
-//       return state
-//   }
+const removeExpense = ({ id } = {}) => ({
+  type: 'REMOVE_EXPENSE',
+  id
+})
 
-// })
+// REMOVE_EXPENSE
+// EDIT_EXPENSE
+// SET_TEXT_FILTER
+// SORT_BY_DATE
+// SORT_BY_AMOUNT
+// SET_START_DATE
+// SET_END_DATE
 
-// const unsubscribe = store.subscribe(() => {
-//   console.log(store.getState());
-// })
+// Expenses Reducer
+const expensesReducerDefaultState = []
+const expensesReducer = (state = expensesReducerDefaultState, action) => {
+  switch (action.type) {
+    case 'ADD_EXPENSE':
+      return [
+        ...state,
+        action.expense
+      ]
+    case 'REMOVE_EXPENSE':
+      return state.filter(({ id }) => id !== action.id)
+    default:
+      return state
+  }
+}
 
-// store.dispatch({
-//   type: 'INCREMENT',
-//   incrementBy: 5
-// })
+// Filters Reducer
+const filtersReducerDefaultState = {
+  text: '',
+  sortBy: 'date',
+  startDate: undefined,
+  endDate: undefined
+}
+const filtersReducer = (state = filtersReducerDefaultState, action) => {
+  switch (action.type) {
+    default:
+      return state
+  }
+}
 
-// store.dispatch({
-//   type: 'INCREMENT'
-// })
+// Store Creation
+const store = createStore(
+  combineReducers({
+    expenses: expensesReducer,
+    filters: filtersReducer
+  })
+)
+store.subscribe(() => {
+  console.log(store.getState());
+})
 
-// store.dispatch({
-//   type: 'RESET'
-// })
+const expenseOne = store.dispatch(addExpense({ description: 'Rent', amount: 1350 }))
+const expenseTwo = store.dispatch(addExpense({ description: 'Coffee', amount: 2 }))
 
-// store.dispatch({
-//   type: 'DECREMENT'
-// })
+store.dispatch(removeExpense({ id: expenseOne.expense.id }))
 
-// store.dispatch({
-//   type: 'DECREMENT',
-//   decrementBy: 10
-// })
+const demoState = {
+  expense: [{
+    id: 'dfafadsf',
+    description: 'January Rent',
+    note: 'This was the final payment for this address',
+    amount: 54500,
+    createdAt: 500000
+  }],
 
-// store.dispatch({
-//   type: 'SET',
-//   count: 101
-// })
+  filters: {
+    text: 'rent',
+    sortBy: 'amount', //date or amount
+    startDate: undefined,
+    endDate: undefined
+  }
+}
 
-// Object Destructuring
-
-// const person = {
-//   name: 'Athos',
-//   age: 40,
-//   location: {
-//     city: 'New York',
-//     temp: 78
-//   }
-// }
-
-// const { name, age } = person
-// const { city, temp } = person.location
-
-// console.log(`${name}, is ${age}`);
-// console.log(`It is ${temp} in ${city}`)
-
-// const book = {
-//   title: 'Ego is the enemy',
-//   author: 'Ryan Holiday',
-//   publisher: {
-//     name: 'Penguin'
-//   }
-// }
-
-// const { name: publisherName = 'self-published' } = book.publisher
-
-// console.log(publisherName)
-
-const address = ['1299 S Juniper Street', 'Philadelphia', 'Pennsylvania', '19147']
-const [, city, state = 'New York'] = address
-
-console.log(`You are in ${city} ${state}`);
-
-const item = ['Coffee (hot)', '$2.00', '$2.50', '$2.75']
-const [coffee, , medium] = item
-
-console.log(`A medium ${coffee} costs ${medium}`);
 
